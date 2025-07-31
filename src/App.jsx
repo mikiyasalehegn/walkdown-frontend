@@ -1,0 +1,42 @@
+import React, { useState } from 'react';
+import LoginScreen from './components/LoginScreen';
+import PositionSelection from './components/PositionSelection';
+import ShiftSelection from './components/ShiftSelection';
+import ChecklistScreen from './components/ChecklistScreen';
+function App() {
+  const [currentScreen, setCurrentScreen] = useState('login');
+  const [position, setPosition] = useState(null);
+  const [shiftInfo, setShiftInfo] = useState(null);
+  const handleLogin = () => {
+    setCurrentScreen('position');
+  };
+  const handlePositionSelect = (selectedPosition) => {
+    setPosition(selectedPosition);
+    setCurrentScreen('shift');
+  };
+  const handleShiftSelect = (shiftData) => {
+    setShiftInfo(shiftData);
+    setCurrentScreen('checklist');
+  };
+  return (
+    <div className="app">
+      {currentScreen === 'login' && <LoginScreen onLogin={handleLogin} />}
+      {currentScreen === 'position' && <PositionSelection onPositionSelect={handlePositionSelect} />}
+      {currentScreen === 'shift' && (
+        <ShiftSelection
+          position={position}
+          onShiftSelect={handleShiftSelect}
+          onBack={() => setCurrentScreen('position')}
+        />
+      )}
+      {currentScreen === 'checklist' && (
+        <ChecklistScreen
+          position={position}
+          shiftInfo={shiftInfo}
+          onLogout={() => setCurrentScreen('login')}
+        />
+      )}
+    </div>
+  );
+}
+export default App;
