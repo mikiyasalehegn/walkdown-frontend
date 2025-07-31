@@ -3,6 +3,8 @@ import LoginScreen from './components/LoginScreen';
 import PositionSelection from './components/PositionSelection';
 import ShiftSelection from './components/ShiftSelection';
 import ChecklistScreen from './components/ChecklistScreen';
+import './App.css';
+
 function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
   const [position, setPosition] = useState(null);
