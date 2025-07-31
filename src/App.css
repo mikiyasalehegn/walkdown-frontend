@@ -1,4 +1,12 @@
 /* src/styles/App.css */
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
 /* Container styles */
 .container {
   max-width: 1200px;
@@ -69,12 +77,34 @@ button:hover {
 }
 
 .logout-btn {
-  float: right;
   background-color: #e74c3c;
+  margin-left: auto; /* Push logout button to the right in flex container */
+  display: block;
 }
 
 .logout-btn:hover {
   background-color: #c0392b;
+}
+
+/* Button group horizontal alignment */
+.button-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;    /* Align buttons vertically */
+  gap: 10px;              /* Space between buttons */
+  margin-bottom: 15px;    /* Optional: space below group */
+}
+
+/* For vertical button groups */
+.button-group.vertical {
+  flex-direction: column;
+  align-items: flex-start; /* Align buttons to the left */
+  gap: 10px;
+}
+
+/* Remove button + button margin if using .button-group */
+button + button {
+  margin-left: 0;
 }
 
 /* Table styles */
