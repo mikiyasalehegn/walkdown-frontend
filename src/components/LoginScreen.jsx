@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import axiosInstance from "../../axios/axiosConfig"; // Update the path as needed
 
-const LoginScreen = ({ onLogin, onShowRegistration }) => {
+const LoginScreen = ({ onLogin, onShowRegistration, navigate }) => {
   const [employeeEmail, setEmployeeEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Email validation: must end with @siemens-energy.com
     if (
@@ -18,7 +20,27 @@ const LoginScreen = ({ onLogin, onShowRegistration }) => {
       alert('Please enter your password');
       return;
     }
-    onLogin();
+    setLoading(true);
+    try {
+      const { data } = await axiosInstance.post("/users/login", {
+        email: employeeEmail,
+        password: password,
+      });
+      alert("Login Successfully!");
+      const user = {
+        username: data.username,
+        userid: data.userId,
+      };
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(user));
+      if (navigate) navigate("/");
+      if (onLogin) onLogin(data);
+    } catch (error) {
+      alert("Something went wrong");
+      console.log(error.stack);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -82,7 +104,9 @@ const LoginScreen = ({ onLogin, onShowRegistration }) => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
 
       {/* Registration link */}
