@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const LoginScreen = ({ onLogin }) => {
+const LoginScreen = ({ onLogin, onShowRegistration }) => {
   const [employeeId, setEmployeeId] = useState('');
   const [password, setPassword] = useState('');
 
@@ -61,6 +61,17 @@ const LoginScreen = ({ onLogin }) => {
         </div>
         <button type="submit">Login</button>
       </form>
+      
+      {/* Registration link */}
+      <div className="registration-link">
+        <p>Don't have an account?</p>
+        <button 
+          type="button" 
+          onClick={onShowRegistration}
+        >
+          Create a new account
+        </button>
+      </div>
     </div>
   );
 };

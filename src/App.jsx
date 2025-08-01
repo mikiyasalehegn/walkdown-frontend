@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import LoginScreen from './components/LoginScreen';
+import RegistrationScreen from './components/RegistrationScreen';
 import PositionSelection from './components/PositionSelection';
 import ShiftSelection from './components/ShiftSelection';
 import ChecklistScreen from './components/ChecklistScreen';
@@ -14,6 +15,16 @@ function App() {
     setCurrentScreen('position');
   };
 
+  const handleShowRegistration = () => {
+    setCurrentScreen('registration');
+  };
+
+  const handleBackToLogin = () => {
+    setCurrentScreen('login');
+    setPosition(null);
+    setShiftInfo(null);
+  };
+
   const handlePositionSelect = (selectedPosition) => {
     setPosition(selectedPosition);
     setCurrentScreen('shift');
@@ -24,15 +35,20 @@ function App() {
     setCurrentScreen('checklist');
   };
 
-  const handleBackToLogin = () => {
-    setCurrentScreen('login');
-    setPosition(null);
-    setShiftInfo(null);
-  };
-
   return (
     <div className="app">
-      {currentScreen === 'login' && <LoginScreen onLogin={handleLogin} />}
+      {currentScreen === 'login' && (
+        <LoginScreen 
+          onLogin={handleLogin} 
+          onShowRegistration={handleShowRegistration}
+        />
+      )}
+      {currentScreen === 'registration' && (
+        <RegistrationScreen 
+          onRegister={() => setCurrentScreen('login')}
+          onBackToLogin={handleBackToLogin}
+        />
+      )}
       {currentScreen === 'position' && (
         <PositionSelection 
           onPositionSelect={handlePositionSelect} 
