@@ -60,9 +60,6 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
       </div>
       
       <h1>Create New Account</h1>
-      <h2>SIEMENS ENERGY</h2>
-      <h2>OPC ENERGY</h2>
-      <h2>OUR GOAL-ZERO HARM! SAFETY FIRST - <span>{new Date().toLocaleDateString()}</span></h2>
       <div className="timestamp" id="registration-time">
         Last updated: {new Date().toLocaleString()}
       </div>
