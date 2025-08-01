@@ -20,32 +20,19 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Validation
-    if (!formData.username || !formData.firstName || !formData.lastName || !formData.email || !formData.password) {
-      alert('Please fill in all fields');
+    // Email validation: must end with @siemens-energy.com
+    if (
+      !employeeEmail ||
+      !/^[A-Za-z0-9._%+-]+@siemens-energy\.com$/.test(employeeEmail)
+    ) {
+      alert('Please enter a valid Siemens Energy email (e.g., gashaw.tadie@siemens-energy.com)');
       return;
     }
-
-    if (formData.password !== confirmPassword) {
-      alert('Passwords do not match');
+    if (!password) {
+      alert('Please enter your password');
       return;
     }
-
-    if (formData.password.length < 6) {
-      alert('Password must be at least 6 characters long');
-      return;
-    }
-
-    if (!formData.email.includes('@')) {
-      alert('Please enter a valid email address');
-      return;
-    }
-
-    // In a real application, you would send this data to your backend
-    console.log('Registration data:', formData);
-    alert('Registration successful! Please login with your new account.');
-    onBackToLogin();
+    onRegister();
   };
 
   return (
@@ -152,4 +139,4 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
   );
 };
 
-export default RegistrationScreen; 
+export default RegistrationScreen;
