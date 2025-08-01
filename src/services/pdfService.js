@@ -1,160 +1,148 @@
 // src/services/pdfService.js
-import { jsPDF } from 'jspdf';
-import 'jspdf-autotable';
+// Using global jsPDF from CDN
 
 export const exportChecklistToPDF = (items, position, shiftInfo, remarks) => {
-  const doc = new jsPDF();
-  
-  // Title
-  doc.setFontSize(18);
-  doc.text("SIEMENS ENERGY WALKDOWN CHECKLIST", 105, 15, { align: "center" });
-  
-  // Header info
-  doc.setFontSize(12);
-  const positionName = position === 'operator' ? 'Operator' : 'Shift Manager';
-  doc.text(`Position: ${positionName}`, 14, 25);
-  
-  // Format shift info
-  const shiftNames = {
-    morning: 'Morning Shift',
-    evening: 'Evening Shift',
-    night: 'Night Shift',
-    weekend: 'Weekend Shift',
-    'morning-12hr': 'Weekend Morning 12hr',
-    'night-12hr': 'Weekend Night 12hr'
-  };
-  
-  let shiftText = shiftNames[shiftInfo.shiftType] || shiftInfo.shiftType;
-  if (shiftInfo.shiftType === 'weekend') {
-    shiftText += ` (${shiftNames[shiftInfo.weekendShiftType]})`;
-  }
-  
-  doc.text(`Shift: ${shiftText}`, 14, 32);
-  
-  // Format date
-  const date = new Date(shiftInfo.date);
-  const formattedDate = date.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
-  });
-  doc.text(`Date: ${formattedDate}`, 14, 39);
-  
-  // Prepare table data with styles
-  const tableData = [];
-  const cellStyles = [];
-  
-  items.forEach(item => {
-    // Create value display text
-    let valueText = item.value;
-    if (item.unit) {
-      valueText += ` ${item.unit}`;
+  try {
+    // Check if jsPDF is available globally
+    if (typeof window.jspdf === 'undefined') {
+      throw new Error('jsPDF library not loaded. Please refresh the page.');
     }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
     
-    // Determine cell style based on validation
-    let textColor = [0, 0, 0]; // Default black
-    let fontStyle = 'normal';
+    // Title
+    doc.setFontSize(18);
+    doc.text("SIEMENS ENERGY WALKDOWN CHECKLIST", 105, 15, { align: "center" });
     
-    // For dropdown options
-    if (item.options) {
-      if (item.value === 'OK' || item.value === 'ABSENT') {
-        textColor = [40, 167, 69]; // Green
-        fontStyle = 'bold';
-      } else if (item.value === 'NO' || item.value === 'PRESENT') {
-        textColor = [220, 53, 69]; // Red
-        fontStyle = 'bold';
-      }
-    } 
-    // For numeric inputs
-    else if (item.min !== undefined && item.max !== undefined) {
-      if (item.allowSlash && item.value.includes('/')) {
-        const parts = item.value.split('/');
-        if (parts.length === 2) {
-          const part1 = parseFloat(parts[0]);
-          const part2 = parseFloat(parts[1]);
-          if (
-            !isNaN(part1) && 
-            !isNaN(part2) &&
-            part1 >= item.min && part1 <= item.max &&
-            part2 >= item.min && part2 <= item.max
-          ) {
-            textColor = [40, 167, 69]; // Green
-            fontStyle = 'bold';
-          } else {
-            textColor = [220, 53, 69]; // Red
-            fontStyle = 'bold';
-          }
-        }
-      } else {
-        const numValue = parseFloat(item.value);
-        if (!isNaN(numValue)) {
-          if (numValue >= item.min && numValue <= item.max) {
-            textColor = [40, 167, 69]; // Green
-            fontStyle = 'bold';
-          } else {
-            textColor = [220, 53, 69]; // Red
-            fontStyle = 'bold';
-          }
-        }
-      }
-    }
-    
-    tableData.push([
-      item.location,
-      item.kks,
-      item.check,
-      valueText
-    ]);
-    
-    // Apply style only to the value column (index 3)
-    cellStyles.push({}, {}, {}, {
-      textColor,
-      fontStyle
-    });
-  });
-  
-  // Create table
-  doc.autoTable({
-    head: [['Location', 'KKS', 'Check', 'Value']],
-    body: tableData,
-    startY: 45,
-    styles: {
-      fontSize: 8,
-      cellPadding: 2,
-    },
-    columnStyles: {
-      0: { cellWidth: 60 },
-      1: { cellWidth: 40 },
-      2: { cellWidth: 30 },
-      3: { cellWidth: 40 },
-    },
-    bodyStyles: cellStyles,
-  });
-  
-  // Add remarks if any
-  if (remarks) {
-    const finalY = doc.lastAutoTable.finalY + 10;
+    // Header info
     doc.setFontSize(12);
-    doc.text('Remarks:', 14, finalY);
-    doc.setFontSize(10);
+    const positionName = position === 'operator' ? 'Operator' : 'Shift Manager';
+    doc.text(`Position: ${positionName}`, 14, 25);
     
-    const maxWidth = 180;
-    const lineHeight = 7;
-    const splitRemarks = doc.splitTextToSize(remarks, maxWidth);
+    // Format shift info
+    const shiftNames = {
+      morning: 'Morning Shift',
+      evening: 'Evening Shift',
+      night: 'Night Shift',
+      weekend: 'Weekend Shift',
+      'morning-12hr': 'Weekend Morning 12hr',
+      'night-12hr': 'Weekend Night 12hr'
+    };
     
-    doc.text(splitRemarks, 14, finalY + 5);
+    let shiftText = shiftNames[shiftInfo.shiftType] || shiftInfo.shiftType;
+    if (shiftInfo.shiftType === 'weekend') {
+      shiftText += ` (${shiftNames[shiftInfo.weekendShiftType]})`;
+    }
+    
+    doc.text(`Shift: ${shiftText}`, 14, 32);
+    
+    // Format date
+    const date = new Date(shiftInfo.date);
+    const formattedDate = date.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric'
+    });
+    doc.text(`Date: ${formattedDate}`, 14, 39);
+    
+    // Prepare table data
+    const tableData = [];
+    
+    items.forEach(item => {
+      // Create value display text
+      let valueText = item.value || 'Not filled';
+      if (item.unit && item.value) {
+        valueText += ` ${item.unit}`;
+      }
+      
+      tableData.push([
+        item.location,
+        item.kks || '',
+        item.check,
+        valueText
+      ]);
+    });
+    
+    // Create table using autoTable
+    if (typeof doc.autoTable === 'function') {
+      doc.autoTable({
+        head: [['Location', 'KKS', 'Check', 'Value']],
+        body: tableData,
+        startY: 45,
+        styles: {
+          fontSize: 8,
+          cellPadding: 2,
+        },
+        columnStyles: {
+          0: { cellWidth: 60 },
+          1: { cellWidth: 40 },
+          2: { cellWidth: 30 },
+          3: { cellWidth: 40 },
+        },
+      });
+    } else {
+      // Fallback if autoTable is not available
+      console.warn('autoTable not available, using simple table');
+      // Add simple table manually
+      let yPos = 45;
+      tableData.forEach((row, index) => {
+        if (index === 0) {
+          // Header
+          doc.setFontSize(10);
+          doc.setFont(undefined, 'bold');
+          doc.text('Location', 14, yPos);
+          doc.text('KKS', 74, yPos);
+          doc.text('Check', 114, yPos);
+          doc.text('Value', 144, yPos);
+          yPos += 10;
+        }
+        
+        doc.setFontSize(8);
+        doc.setFont(undefined, 'normal');
+        doc.text(row[0], 14, yPos);
+        doc.text(row[1], 74, yPos);
+        doc.text(row[2], 114, yPos);
+        doc.text(row[3], 144, yPos);
+        yPos += 8;
+        
+        if (yPos > 280) {
+          doc.addPage();
+          yPos = 20;
+        }
+      });
+    }
+    
+    // Add remarks if any
+    if (remarks && remarks.trim()) {
+      const finalY = doc.lastAutoTable ? doc.lastAutoTable.finalY + 10 : 200;
+      doc.setFontSize(12);
+      doc.text('Remarks:', 14, finalY);
+      doc.setFontSize(10);
+      
+      const maxWidth = 180;
+      const splitRemarks = doc.splitTextToSize(remarks, maxWidth);
+      
+      doc.text(splitRemarks, 14, finalY + 5);
+    }
+    
+    // Footer
+    const pageHeight = doc.internal.pageSize.height;
+    doc.setFontSize(8);
+    doc.text(
+      "Generated by Siemens Energy Alon-Gat Walkdown System",
+      105,
+      pageHeight - 10,
+      { align: "center" }
+    );
+    
+    // Save PDF
+    const fileName = `walkdown_checklist_${new Date().toISOString().slice(0, 10)}.pdf`;
+    doc.save(fileName);
+    
+    return fileName;
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    throw new Error(`Failed to generate PDF: ${error.message}`);
   }
-  
-  // Footer
-  const pageHeight = doc.internal.pageSize.height;
-  doc.setFontSize(8);
-  doc.text(
-    "Generated by Siemens Energy Alon-Gat Walkdown System",
-    105,
-    pageHeight - 10,
-    { align: "center" }
-  );
-  
-  // Save PDF
-  doc.save(`walkdown_checklist_${new Date().toISOString().slice(0, 10)}.pdf`);
 };

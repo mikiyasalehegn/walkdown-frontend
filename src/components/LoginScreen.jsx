@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+
 const LoginScreen = ({ onLogin }) => {
   const [employeeId, setEmployeeId] = useState('');
   const [password, setPassword] = useState('');
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (employeeId.length !== 4 || !/^\d{4}$/.test(employeeId)) {
@@ -14,8 +16,18 @@ const LoginScreen = ({ onLogin }) => {
     }
     onLogin();
   };
+
   return (
     <div className="login-form">
+      {/* Logo */}
+      <div className="logo-container">
+        <img 
+          src="/Images/Siemens-Energy-logo-1.png" 
+          alt="Siemens Energy Logo" 
+          className="logo"
+        />
+      </div>
+      
       <h1>WALKDOWN SIEMENS ENERGY</h1>
       <h2>SIEMENS ENERGY</h2>
       <h2>OPC ENERGY</h2>
@@ -23,6 +35,7 @@ const LoginScreen = ({ onLogin }) => {
       <div className="timestamp" id="login-time">
         Last updated: {new Date().toLocaleString()}
       </div>
+      
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="employee-id">Employee ID:</label>
@@ -51,4 +64,5 @@ const LoginScreen = ({ onLogin }) => {
     </div>
   );
 };
+
 export default LoginScreen;
