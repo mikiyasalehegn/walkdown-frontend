@@ -1,4 +1,3 @@
-/* src/styles/App.css */
 /* Global styles */
 body {
   font-family: Arial, sans-serif;
@@ -18,7 +17,8 @@ body {
 }
 
 /* Typography */
-h1, h2 {
+h1,
+h2 {
   color: #2c3e50;
 }
 
@@ -33,6 +33,7 @@ h2 {
 
 /* Form styles */
 .login-form,
+.position-selection,
 .shift-selection {
   max-width: 400px;
   margin: 50px auto;
@@ -46,6 +47,10 @@ h2 {
   margin-bottom: 15px;
 }
 
+.weekend-shift {
+  /* Additional styling for weekend shift section if needed */
+}
+
 label {
   display: block;
   margin-bottom: 5px;
@@ -53,7 +58,8 @@ label {
 }
 
 input,
-select {
+select,
+textarea {
   width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
@@ -70,41 +76,52 @@ button {
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  margin-right: 5px;
+  margin-top: 5px;
 }
 
 button:hover {
   background-color: #2980b9;
 }
 
+button.secondary {
+  background-color: #6c757d;
+}
+
+button.secondary:hover {
+  background-color: #5a6268;
+}
+
 .logout-btn {
+  float: right;
   background-color: #e74c3c;
-  margin-left: auto; /* Push logout button to the right in flex container */
-  display: block;
 }
 
 .logout-btn:hover {
   background-color: #c0392b;
 }
 
-/* Button group horizontal alignment */
-.button-group {
-  display: flex;
-  flex-direction: row;
-  align-items: center;    /* Align buttons vertically */
-  gap: 10px;              /* Space between buttons */
-  margin-bottom: 15px;    /* Optional: space below group */
+.export-btn {
+  background-color: #6c757d;
+  color: white;
 }
 
-/* For vertical button groups */
-.button-group.vertical {
-  flex-direction: column;
-  align-items: flex-start; /* Align buttons to the left */
-  gap: 10px;
+.export-btn:hover {
+  background-color: #5a6268;
 }
 
-/* Remove button + button margin if using .button-group */
-button + button {
-  margin-left: 0;
+.modal-btn {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-btn:hover {
+  background-color: #c0392b;
 }
 
 /* Table styles */
@@ -129,7 +146,146 @@ tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
+/* Position selection styles */
+.position-options {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.position-btn {
+  width: 48%;
+  padding: 15px;
+  font-size: 16px;
+}
+
+/* Weather widget styles */
+.weather-info {
+  background-color: #e3f2fd;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.weather-details {
+  display: flex;
+  align-items: center;
+}
+
+.weather-icon {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.refresh-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  color: #3498db;
+}
+
+/* Value input styles */
+.value-input-container {
+  position: relative;
+}
+
+.value-input {
+  padding-right: 40px !important;
+}
+
+.unit-label {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+/* Remarks section styles */
+.remarks-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.remarks-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.submit-confirm {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Export buttons */
+.export-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border: 3px solid #e74c3c;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.modal-title {
+  color: #e74c3c;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.modal-message {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
 /* Utility classes */
 .hidden {
   display: none;
+}
+
+.timestamp {
+  font-size: 0.9em;
+  color: #666;
 }

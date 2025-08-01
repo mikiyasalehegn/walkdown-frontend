@@ -1,11 +1,13 @@
 import React from 'react';
+
 const CriticalWarningModal = ({ show, onClose }) => {
   if (!show) {
     return null;
   }
+
   // In a real app, you would play a warning sound here
   return (
-    <div className="modal">
+    <div className={`modal ${show ? 'show' : ''}`}>
       <div className="modal-content">
         <div className="modal-title">!!! WARNING !!!</div>
         <div className="modal-message">
@@ -18,4 +20,5 @@ const CriticalWarningModal = ({ show, onClose }) => {
     </div>
   );
 };
+
 export default CriticalWarningModal;
