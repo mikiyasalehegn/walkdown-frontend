@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axiosInstance from "../../axios/axiosConfig"; // Adjust the path if needed
 
 const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
     password: ''
   });
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -18,21 +20,41 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Email validation: must end with @siemens-energy.com
     if (
-      !employeeEmail ||
-      !/^[A-Za-z0-9._%+-]+@siemens-energy\.com$/.test(employeeEmail)
+      !formData.email ||
+      !/^[A-Za-z0-9._%+-]+@siemens-energy\.com$/.test(formData.email)
     ) {
       alert('Please enter a valid Siemens Energy email (e.g., gashaw.tadie@siemens-energy.com)');
       return;
     }
-    if (!password) {
+    if (!formData.password) {
       alert('Please enter your password');
       return;
     }
-    onRegister();
+    if (formData.password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+    setLoading(true);
+    try {
+      const { data } = await axiosInstance.post("/users/register", {
+        username: formData.username,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+      });
+      alert("Registration Successful!");
+      if (onRegister) onRegister(data);
+    } catch (error) {
+      alert("Something went wrong");
+      console.log(error.stack);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -92,15 +114,16 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="email">Employee Email:</label>
           <input
             type="email"
             id="email"
             name="email"
-            placeholder="Enter email address"
+            placeholder="Enter your Siemens Energy email"
             value={formData.email}
             onChange={handleInputChange}
             required
+            pattern="^[A-Za-z0-9._%+-]+@siemens-energy\.com$"
           />
         </div>
 
@@ -130,7 +153,9 @@ const RegistrationScreen = ({ onRegister, onBackToLogin }) => {
           />
         </div>
 
-        <button type="submit">Register</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Registering...' : 'Register'}
+        </button>
         <button type="button" className="secondary" onClick={onBackToLogin} style={{ marginTop: '10px' }}>
           Back to Login
         </button>
